@@ -1,0 +1,41 @@
+#################################################
+#                                               #
+# A guide to install ESPResSo++ with Scafacos   #
+#                                               #
+#################################################
+
+1. Download and compile Scafacos
+    #download
+    git clone --recursive git://github.com/scafacos/scafacos.git
+    
+    #build
+    > cd ./scafacos
+    > ./bootstrap
+    > mkdir build
+    > cd build
+    > mkdir local # create a local directory for installing lib into the system
+    
+    > ../configure --prefix=[absolute_path]/scafacos/build/local --disable-doc --enable-shared
+      ###  "--enable-shared" is a must for creating a dynamical library
+      ###  optional to include only selected methods, use e.g. --enable-fcs-solvers=direct,ewald,p3m, ...
+      ###  see more with ../configure --help
+    
+    # ATTENTION: If mmm2d is included, see comments in this issue (https://github.com/scafacos/scafacos/issues/28) and correct the source code before make.
+    
+    #make install
+    > make install
+    > make check
+    
+2. Compile and enable Scafacos into ESPResSo++
+    
+    > cd espressopp-xxx
+    > mkdir build
+    > cd build
+    > cmake ../ -DSCAFACOS_BUILD=[absolute_path]/scafacos/build/ -DSCAFACOS_SOURCE=[absolute_path]/scafacos/ -DSCAFACOS_ROOT_DIR=[absolute_path]/scafacos/build/local
+    > make
+
+3. Run ESPResSo++ MD with Scafacos
+    #export env before an MD run
+    > export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:[absolute_path]/scafacos/build/local/lib/"
+    
+    # And see in espressopp-xxx/example/water_gromacs/water_fcs.py
