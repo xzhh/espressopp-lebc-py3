@@ -134,6 +134,11 @@ public:
 
         ifshear=false;
         cottheta=.0;
+        if (system -> shearOffset != .0){
+          cottheta=system->shearOffset/Lz;
+          if (cottheta!=.0)
+            ifshear=true;
+        }
 
         real skmax = kmax / min(Lx, min(Ly, Lz));
         real skmaxsq = skmax * skmax;  // we choose the biggest cutoff
